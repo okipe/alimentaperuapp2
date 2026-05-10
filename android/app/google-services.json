@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "365742207294",
+    "project_id": "proyecto-comedoralimentaperu",
+    "storage_bucket": "proyecto-comedoralimentaperu.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:365742207294:android:20166b1181179c37c4fc6f",
+        "android_client_info": {
+          "package_name": "com.example.alimentaperu_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAecRbiYMpwSjpUxtbO90rK7oVGnBNUGco"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
