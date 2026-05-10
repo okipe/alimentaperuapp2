@@ -1,3 +1,4 @@
+import 'package:alimentaperu_app/views/admin/registro_Menu/registro_menu_view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,35 +11,33 @@ import 'package:alimentaperu_app/viewmodels/menu_diario_viewmodel.dart';
 import 'package:alimentaperu_app/viewmodels/estado_pagos_viewmodel.dart';
 import 'package:alimentaperu_app/viewmodels/donacion_viewmodel.dart';
 
-// Vistas
+// Vistas Generales
 import 'package:alimentaperu_app/views/splash_screen.dart';
 import 'package:alimentaperu_app/views/login_view.dart';
+import 'package:alimentaperu_app/views/registro_usuario_view.dart';
+import 'package:alimentaperu_app/views/forgot_password_view.dart';
+
+// Vistas Administrativas
 import 'package:alimentaperu_app/views/admin/admin_dashboard.dart';
-import 'package:alimentaperu_app/views/admin/registro_menu/registro_menu_view.dart';
+
 import 'package:alimentaperu_app/views/admin/reportes_view.dart';
 import 'package:alimentaperu_app/views/admin/inventario/inventario_view.dart';
 import 'package:alimentaperu_app/views/admin/inventario/registro_ingreso_view.dart';
 import 'package:alimentaperu_app/views/admin/inventario/registro_salida.dart';
 import 'package:alimentaperu_app/views/admin/inventario/reporte_stock_view.dart';
-import 'package:alimentaperu_app/views/comensal/comensal_dashboard_view.dart';
-import 'package:alimentaperu_app/views/comensal/menu_diario_view.dart';
-import 'package:alimentaperu_app/views/comensal/estado_pagos_view.dart';
-import 'package:alimentaperu_app/views/comensal/donacion_view.dart';
 import 'package:alimentaperu_app/views/admin/Beneficiaria/beneficiarias_view.dart';
 import 'package:alimentaperu_app/views/admin/Beneficiaria/padron_beneficiarios_view.dart';
-import 'package:alimentaperu_app/views/admin/Beneficiaria/gestion_saldos_view.dart';
 import 'package:alimentaperu_app/views/admin/Beneficiaria/gestion_donaciones_view.dart';
 import 'package:alimentaperu_app/views/admin/Beneficiaria/registro_cocinera_view.dart';
-import 'package:alimentaperu_app/views/registro_usuario_view.dart';
-import 'package:alimentaperu_app/views/forgot_password_view.dart';
+
+// Vistas Comensal
+import 'package:alimentaperu_app/views/comensal/comensal_dashboard_view.dart';
+import 'package:alimentaperu_app/views/comensal/donacion_view.dart';
+import 'package:alimentaperu_app/views/comensal/menu_diario_view.dart';
 
 void main() async {
-  // Asegura que los bindings de Flutter estén listos
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Inicializamos Firebase antes de arrancar la app para que el resto sea instantáneo
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
   runApp(const MyApp());
 }
 
@@ -63,7 +62,6 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.urbanistTextTheme(),
           appBarTheme: const AppBarTheme(centerTitle: true, elevation: 0),
         ),
-        // Al ya estar Firebase listo, entramos directo al Splash sin parpadeos
         initialRoute: '/splash',
         routes: {
           '/splash': (context) => const SplashScreen(),
@@ -73,7 +71,8 @@ class MyApp extends StatelessWidget {
 
           // Rutas Administrativas
           '/dashboard': (context) => const AdminDashboard(),
-          '/registro_menu': (context) => const RegistroMenuView(),
+          // Se quitó el 'const' para evitar el error de "Not a constant expression"
+          '/registro_menu': (context) => RegistroMenuView(),
           '/beneficiarias': (context) => const GestionBeneficiariasView(),
           '/reportes': (context) => const ReportesView(),
           '/inventario': (context) => const InventarioView(),
@@ -84,12 +83,11 @@ class MyApp extends StatelessWidget {
           // Módulo Comensal
           '/comensal_dashboard': (context) => const ComensalDashboardView(),
           '/donacion': (context) => const DonacionView(),
-          '/menu_diario': (context) => const MenuDiarioView(),
-          '/estado_pagos': (context) => const EstadoPagosView(),
+          // Se quitó el 'const' para evitar el error de "Not a constant expression"
+          '/menu_diario': (context) => MenuDiarioView(),
 
           // Módulo Beneficiaria
           '/padron_lista': (context) => const PadronBeneficiariosView(),
-          '/gestion_saldos': (context) => const GestionSaldosView(),
           '/registro_cocinera': (context) => const RegistroCocineraView(),
           '/gestion_donaciones': (context) => const GestionDonacionesView(),
         },

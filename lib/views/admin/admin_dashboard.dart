@@ -295,7 +295,8 @@ class AdminDashboard extends StatelessWidget {
                   _buildDashboardCard(
                     context,
                     title: 'Beneficiarias',
-                    subtitle: 'Padrón de comensales y recargas',
+                    subtitle:
+                        'Padrón de comensales y asistencia', // <-- CORREGIDO
                     icon: Icons.people_alt_rounded,
                     accentColor: const Color(0xFF3B82C4),
                     iconBg: const Color(0xFFE3F0FF),
@@ -310,7 +311,8 @@ class AdminDashboard extends StatelessWidget {
                   _buildDashboardCard(
                     context,
                     title: 'Reportes y Gestión',
-                    subtitle: 'Análisis financiero y de consumo',
+                    subtitle:
+                        'Análisis logístico y de consumo', // <-- CORREGIDO
                     icon: Icons.analytics_rounded,
                     accentColor: const Color(0xFF7F77DD),
                     iconBg: const Color(0xFFEEEDFE),

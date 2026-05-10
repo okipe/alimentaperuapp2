@@ -27,8 +27,9 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
       }
     } on FirebaseAuthException catch (e) {
       String mensaje = "Error al enviar el correo";
-      if (e.code == 'user-not-found')
+      if (e.code == 'user-not-found') {
         mensaje = "Este correo no está registrado";
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(mensaje), backgroundColor: Colors.red),
       );

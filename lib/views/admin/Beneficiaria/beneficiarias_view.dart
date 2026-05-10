@@ -6,17 +6,18 @@ class GestionBeneficiariasView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Paleta de Colores Alimenta Perú
     const Color darkGreen = Color(0xFF1A4D2E);
     const Color bgColor = Color(0xFFF0F4F1);
-    const Color accentSaldos = Color(0xFFE8924A);
-    const Color accentCocinera = Color(0xFF3B82C4);
     const Color accentPadron = Color(0xFF2E7D52);
-    const Color accentDonaciones = Color(0xFFD65A5A); // Color solidario añadido
+    const Color accentDonaciones = Color(0xFFD65A5A);
+    const Color accentCocinera = Color(0xFF3B82C4);
 
     return Scaffold(
       backgroundColor: bgColor,
       body: Column(
         children: [
+          // --- HEADER SUPERIOR ---
           Stack(
             children: [
               Container(
@@ -40,33 +41,39 @@ class GestionBeneficiariasView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         IconButton(
+                          onPressed: () => Navigator.pop(context),
                           icon: const Icon(
-                            Icons.arrow_back_ios_new_rounded,
+                            Icons.arrow_back_ios_new,
                             color: Colors.white,
                             size: 20,
                           ),
-                          onPressed: () => Navigator.pop(context),
                         ),
                         Text(
-                          "ADMINISTRACIÓN",
-                          style: GoogleFonts.dmSans(
-                            color: Colors.white.withOpacity(0.6),
+                          "Gestión Social",
+                          style: GoogleFonts.playfairDisplay(
+                            fontSize: 22,
                             fontWeight: FontWeight.bold,
-                            fontSize: 11,
-                            letterSpacing: 2,
+                            color: Colors.white,
                           ),
                         ),
                         const SizedBox(width: 40),
                       ],
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 25),
                     Text(
-                      "Gestión Principal", // Cambiado para abarcar todo
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.playfairDisplay(
+                      "Beneficiarias y Colaboradores",
+                      style: GoogleFonts.dmSans(
                         color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Administración de la comunidad",
+                      style: GoogleFonts.dmSans(
+                        color: Colors.white70,
+                        fontSize: 13,
                       ),
                     ),
                   ],
@@ -74,6 +81,8 @@ class GestionBeneficiariasView extends StatelessWidget {
               ),
             ],
           ),
+
+          // --- LISTA DE OPERACIONES ---
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 30),
@@ -81,17 +90,16 @@ class GestionBeneficiariasView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'OPERACIONES DISPONIBLES',
+                    "OPERACIONES DISPONIBLES",
                     style: GoogleFonts.dmSans(
-                      fontSize: 10,
+                      fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      letterSpacing: 1.5,
-                      color: const Color(0xFF7A9E8A),
+                      letterSpacing: 1.2,
+                      color: darkGreen.withOpacity(0.6),
                     ),
                   ),
                   const SizedBox(height: 20),
 
-                  // MÓDULO 1
                   _buildActionCard(
                     context,
                     title: "Padrón General",
@@ -104,42 +112,26 @@ class GestionBeneficiariasView extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
 
-                  // MÓDULO 2
-                  _buildActionCard(
-                    context,
-                    title: "Control de Saldos",
-                    subtitle: "Validación de recargas pendientes",
-                    icon: Icons.account_balance_wallet_rounded,
-                    accentColor: accentSaldos,
-                    iconBg: const Color(0xFFFFF0E4),
-                    iconColor: const Color(0xFFC86A1A),
-                    route: '/gestion_saldos',
-                  ),
-                  const SizedBox(height: 16),
-
-                  // MÓDULO 3 (NUEVO CONTROL DE DONACIONES)
                   _buildActionCard(
                     context,
                     title: "Control de Donaciones",
                     subtitle: "Validación de ingresos y productos",
                     icon: Icons.volunteer_activism_rounded,
                     accentColor: accentDonaciones,
-                    iconBg: const Color(0xFFFCEAEA),
-                    iconColor: const Color(0xFFB73D3D),
-                    route:
-                        '/gestion_donaciones', // Asegúrate de registrar esta ruta en tu main.dart
+                    iconBg: const Color(0xFFFFEBEE),
+                    iconColor: accentDonaciones,
+                    route: '/gestion_donaciones',
                   ),
                   const SizedBox(height: 16),
 
-                  // MÓDULO 4
                   _buildActionCard(
                     context,
                     title: "Personal de Cocina",
-                    subtitle: "Gestión de cocineras por comedor",
-                    icon: Icons.restaurant_menu_rounded,
+                    subtitle: "Gestión de cocineras y roles",
+                    icon: Icons.soup_kitchen_rounded,
                     accentColor: accentCocinera,
-                    iconBg: const Color(0xFFE3F0FF),
-                    iconColor: const Color(0xFF1C5FA8),
+                    iconBg: const Color(0xFFE3F2FD),
+                    iconColor: accentCocinera,
                     route: '/registro_cocinera',
                   ),
                 ],
@@ -161,76 +153,80 @@ class GestionBeneficiariasView extends StatelessWidget {
     required Color iconColor,
     required String route,
   }) {
-    return Material(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(22),
-      child: InkWell(
-        onTap: () => Navigator.pushNamed(context, route),
-        borderRadius: BorderRadius.circular(22),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(22),
-            border: Border.all(color: const Color(0xFFBDDAC8).withOpacity(0.4)),
-          ),
-          child: Stack(
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(context, route),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(22),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 15,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: IntrinsicHeight(
+          child: Row(
             children: [
-              Positioned(
-                top: 0,
-                left: 0,
-                bottom: 0,
-                child: Container(
-                  width: 5,
-                  decoration: BoxDecoration(
-                    color: accentColor,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(22),
-                      bottomLeft: Radius.circular(22),
-                    ),
+              Container(
+                width: 6,
+                decoration: BoxDecoration(
+                  color: accentColor,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(22),
+                    bottomLeft: Radius.circular(22),
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 52,
-                      height: 52,
-                      decoration: BoxDecoration(
-                        color: iconBg,
-                        borderRadius: BorderRadius.circular(16),
+              // CORRECCIÓN AQUÍ: Se cambió Expanded por Padding
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                    vertical: 22,
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: iconBg,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Icon(icon, size: 26, color: iconColor),
                       ),
-                      child: Icon(icon, size: 26, color: iconColor),
-                    ),
-                    const SizedBox(width: 18),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            title,
-                            style: GoogleFonts.dmSans(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xFF1C3326),
+                      const SizedBox(width: 18),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              title,
+                              style: GoogleFonts.dmSans(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF1C3326),
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            subtitle,
-                            style: GoogleFonts.dmSans(
-                              fontSize: 12,
-                              color: const Color(0xFF7A9E8A),
+                            const SizedBox(height: 4),
+                            Text(
+                              subtitle,
+                              style: GoogleFonts.dmSans(
+                                fontSize: 12,
+                                color: const Color(0xFF7A9E8A),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    const Icon(
-                      Icons.chevron_right_rounded,
-                      color: Color(0xFF3B7A57),
-                    ),
-                  ],
+                      const Icon(
+                        Icons.chevron_right_rounded,
+                        color: Color(0xFF3B7A57),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

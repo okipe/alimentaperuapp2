@@ -6,10 +6,9 @@ class InventarioView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Paleta de Colores Alimenta Perú
     const Color darkGreen = Color(0xFF1A4D2E);
     const Color bgColor = Color(0xFFF0F4F1);
-    const Color accentRed = Color(0xFFD65A5A); // Rojo para Salidas
+    const Color accentRed = Color(0xFFD65A5A);
     const Color accentBlue = Color(0xFF3B82C4);
     const Color accentGreen = Color(0xFF2E7D52);
 
@@ -96,7 +95,7 @@ class InventarioView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'OPERACIONES DE CONTROL',
+                    'OPERACIONES LOGÍSTICAS',
                     style: GoogleFonts.dmSans(
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
@@ -108,8 +107,8 @@ class InventarioView extends StatelessWidget {
 
                   _buildInventoryCard(
                     context,
-                    title: "Consulta de Stock",
-                    subtitle: "Visualizar existencias actuales",
+                    title: "Consulta y Alertas",
+                    subtitle: "Control FIFO y stock crítico",
                     icon: Icons.inventory_2_rounded,
                     accentColor: accentBlue,
                     iconBg: const Color(0xFFE3F0FF),
@@ -119,8 +118,8 @@ class InventarioView extends StatelessWidget {
                   const SizedBox(height: 16),
                   _buildInventoryCard(
                     context,
-                    title: "Registrar Ingresos",
-                    subtitle: "Entrada de nuevos insumos",
+                    title: "Ingreso de Lotes",
+                    subtitle: "Registro de donaciones o compras",
                     icon: Icons.add_box_rounded,
                     accentColor: accentGreen,
                     iconBg: const Color(0xFFE8F5E9),
@@ -128,12 +127,11 @@ class InventarioView extends StatelessWidget {
                     route: '/registro_ingreso',
                   ),
                   const SizedBox(height: 16),
-                  // REGISTRO DE SALIDA EN ROJO
                   _buildInventoryCard(
                     context,
-                    title: "Registrar Salidas",
-                    subtitle: "Despacho de raciones diarias",
-                    icon: Icons.unarchive_rounded,
+                    title: "Despacho a Cocina",
+                    subtitle: "Salida de insumos para el menú",
+                    icon: Icons.soup_kitchen_rounded, // Icono más adecuado
                     accentColor: accentRed,
                     iconBg: const Color(0xFFFFEBEE),
                     iconColor: accentRed,

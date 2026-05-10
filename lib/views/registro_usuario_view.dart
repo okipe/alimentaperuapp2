@@ -60,8 +60,9 @@ class _RegistroUsuarioViewState extends State<RegistroUsuarioView> {
             'fecha_registro': FieldValue.serverTimestamp(),
           });
 
-      if (mounted)
+      if (mounted) {
         Navigator.pushReplacementNamed(context, '/comensal_dashboard');
+      }
     } on FirebaseAuthException catch (e) {
       _mostrarError(e.message ?? "Error al registrar");
     } finally {
@@ -368,7 +369,7 @@ class _RegistroUsuarioViewState extends State<RegistroUsuarioView> {
         "Selecciona tu comedor",
         style: GoogleFonts.urbanist(fontSize: 14),
       ),
-      value: _comedorSeleccionado,
+      initialValue: _comedorSeleccionado,
       items: _comedores
           .map(
             (c) => DropdownMenuItem(

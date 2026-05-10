@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:alimentaperu_app/viewmodels/login_viewmodel.dart';
 
 class LoginView extends StatefulWidget {
-  const LoginView({Key? key}) : super(key: key);
+  const LoginView({super.key});
 
   @override
   State<LoginView> createState() => _LoginViewState();

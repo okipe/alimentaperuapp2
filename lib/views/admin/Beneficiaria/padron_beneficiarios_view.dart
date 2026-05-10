@@ -301,8 +301,9 @@ class _PadronBeneficiariosViewState extends State<PadronBeneficiariosView> {
                   .where('rol', isEqualTo: 'comensal')
                   .snapshots(),
               builder: (context, snapshot) {
-                if (!snapshot.hasData)
+                if (!snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
+                }
 
                 final docs = snapshot.data!.docs.where((d) {
                   final data = d.data() as Map<String, dynamic>;

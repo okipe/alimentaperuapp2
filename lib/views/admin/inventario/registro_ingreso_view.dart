@@ -18,6 +18,7 @@ class _RegistroIngresoViewState extends State<RegistroIngresoView> {
   String unidadIng = 'kg';
   DateTime? fechaVence;
 
+  // Lista Maestra Unificada
   final Map<String, List<String>> listaMaestra = {
     'Abarrotes': [
       'Arroz',
@@ -43,69 +44,8 @@ class _RegistroIngresoViewState extends State<RegistroIngresoView> {
       body: Column(
         children: [
           // --- HEADER PREMIUM ---
-          Stack(
-            children: [
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.only(
-                  top: 60,
-                  bottom: 40,
-                  left: 22,
-                  right: 22,
-                ),
-                decoration: BoxDecoration(
-                  color: darkGreen,
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(40),
-                    bottomRight: Radius.circular(40),
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back_ios_new_rounded,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                        Expanded(
-                          child: Text(
-                            "REGISTRO DE INGRESOS",
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.dmSans(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              letterSpacing: 1.5,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 40),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Positioned(
-                top: -30,
-                right: -30,
-                child: Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.05),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          _buildHeader(),
 
-          // --- FORMULARIO Y LÓGICA INTACTA ---
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(22),
@@ -125,241 +65,284 @@ class _RegistroIngresoViewState extends State<RegistroIngresoView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildLabel("FECHA DE REGISTRO"),
-                    Container(
-                      padding: const EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                        color: bgColor.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.lock_outline,
-                            size: 20,
-                            color: darkGreen.withOpacity(0.5),
-                          ),
-                          const SizedBox(width: 10),
-                          Text(
-                            DateFormat('dd/MM/yyyy').format(DateTime.now()),
-                            style: GoogleFonts.dmSans(
-                              fontWeight: FontWeight.w600,
-                              color: darkGreen,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    _buildLabel("FECHA DE RECEPCIÓN"),
+                    _buildReadOnlyDate(),
                     const SizedBox(height: 20),
 
                     _buildLabel("CATEGORÍA"),
-                    _buildDropdown(
-                      catIng,
-                      listaMaestra.keys.toList(),
-                      (val) => setState(() {
+                    _buildDropdown(catIng, listaMaestra.keys.toList(), (val) {
+                      setState(() {
                         catIng = val;
                         prodIng = null;
-                      }),
-                    ),
+                      });
+                    }),
 
                     if (catIng != null) ...[
                       const SizedBox(height: 20),
                       _buildLabel("PRODUCTO"),
-                      _buildDropdown(
-                        prodIng,
-                        listaMaestra[catIng!]!,
-                        (val) => setState(() => prodIng = val),
-                      ),
+                      _buildDropdown(prodIng, listaMaestra[catIng!]!, (val) {
+                        setState(() => prodIng = val);
+                      }),
                     ],
                     const SizedBox(height: 20),
 
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildLabel("CANTIDAD"),
-                              TextField(
-                                controller: cantCtrl,
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                      decimal: true,
-                                    ),
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                    RegExp(r'^\d+\.?\d{0,2}'),
-                                  ),
-                                ],
-                                style: GoogleFonts.dmSans(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: bgColor.withOpacity(0.5),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 15,
-                                    vertical: 15,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 15),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildLabel("UNIDAD"),
-                              _buildDropdown(unidadIng, [
-                                'kg',
-                                'lt',
-                                'unid',
-                                'sacos',
-                              ], (val) => setState(() => unidadIng = val!)),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                    _buildCantidadUnidadRow(),
                     const SizedBox(height: 20),
 
-                    _buildLabel("FECHA DE VENCIMIENTO"),
-                    InkWell(
-                      onTap: () async {
-                        DateTime? p = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now().add(
-                            const Duration(days: 30),
-                          ),
-                          firstDate: DateTime.now(),
-                          lastDate: DateTime(2030),
-                        );
-                        if (p != null) setState(() => fechaVence = p);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          color: bgColor.withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: fechaVence == null
-                                ? Colors.red.withOpacity(0.5)
-                                : Colors.transparent,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              fechaVence == null
-                                  ? "Seleccionar fecha..."
-                                  : DateFormat(
-                                      'dd/MM/yyyy',
-                                    ).format(fechaVence!),
-                              style: GoogleFonts.dmSans(
-                                color: fechaVence == null
-                                    ? Colors.red
-                                    : darkGreen,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Icon(
-                              Icons.edit_calendar_rounded,
-                              color: accentGreen,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    _buildLabel("FECHA DE VENCIMIENTO (CRÍTICO PARA FIFO)"),
+                    _buildDatePicker(),
                     const SizedBox(height: 35),
 
-                    SizedBox(
-                      width: double.infinity,
-                      height: 55,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: darkGreen,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 0,
-                        ),
-                        onPressed: () {
-                          // LÓGICA RÁPIDA: Sin "await" que congele la pantalla
-                          if (prodIng != null &&
-                              cantCtrl.text.isNotEmpty &&
-                              fechaVence != null) {
-                            // 1. Mostrar notificación inmediata
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  "✅ Guardado con éxito",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                backgroundColor: Color(0xFF2E7D52),
-                                duration: Duration(seconds: 2),
-                              ),
-                            );
-
-                            // 2. Enviar a Firebase (ocurre en segundo plano)
-                            _firestore.collection('Productos').add({
-                              'nombre': prodIng,
-                              'nombre_busqueda': prodIng!.toUpperCase(),
-                              'categoria': catIng,
-                              'cantidad': double.parse(cantCtrl.text),
-                              'unidad': unidadIng,
-                              'fecha_vencimiento': Timestamp.fromDate(
-                                fechaVence!,
-                              ),
-                              'fecha_ingreso': FieldValue.serverTimestamp(),
-                            });
-
-                            // 3. Limpiar formulario inmediatamente
-                            setState(() {
-                              cantCtrl.clear();
-                              prodIng = null;
-                              catIng = null;
-                              fechaVence = null;
-                            });
-                          } else {
-                            // Alerta si faltan datos
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  "⚠️ Completa todos los campos",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                backgroundColor: Colors.orange,
-                              ),
-                            );
-                          }
-                        },
-                        child: Text(
-                          "GUARDAR REGISTRO",
-                          style: GoogleFonts.dmSans(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.2,
-                          ),
-                        ),
-                      ),
-                    ),
+                    _buildSubmitButton(),
                   ],
                 ),
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  // --- COMPONENTES DE UI ---
+
+  Widget _buildHeader() => Stack(
+    children: [
+      Container(
+        width: double.infinity,
+        padding: const EdgeInsets.only(
+          top: 60,
+          bottom: 40,
+          left: 22,
+          right: 22,
+        ),
+        decoration: BoxDecoration(
+          color: darkGreen,
+          borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(40),
+            bottomRight: Radius.circular(40),
+          ),
+        ),
+        child: Row(
+          children: [
+            IconButton(
+              icon: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: Colors.white,
+                size: 20,
+              ),
+              onPressed: () => Navigator.pop(context),
+            ),
+            Expanded(
+              child: Text(
+                "INGRESO DE LOTES",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.dmSans(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  letterSpacing: 1.5,
+                ),
+              ),
+            ),
+            const SizedBox(width: 40),
+          ],
+        ),
+      ),
+    ],
+  );
+
+  Widget _buildReadOnlyDate() => Container(
+    padding: const EdgeInsets.all(15),
+    decoration: BoxDecoration(
+      color: bgColor.withOpacity(0.5),
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Row(
+      children: [
+        Icon(
+          Icons.verified_user_outlined,
+          size: 20,
+          color: darkGreen.withOpacity(0.5),
+        ),
+        const SizedBox(width: 10),
+        Text(
+          DateFormat('dd/MM/yyyy').format(DateTime.now()),
+          style: GoogleFonts.dmSans(
+            fontWeight: FontWeight.w600,
+            color: darkGreen,
+          ),
+        ),
+      ],
+    ),
+  );
+
+  Widget _buildCantidadUnidadRow() => Row(
+    children: [
+      Expanded(
+        flex: 2,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildLabel("CANTIDAD"),
+            TextField(
+              controller: cantCtrl,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+              ],
+              style: GoogleFonts.dmSans(fontWeight: FontWeight.w600),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: bgColor.withOpacity(0.5),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 15,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(width: 15),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildLabel("UNIDAD"),
+            _buildDropdown(unidadIng, [
+              'kg',
+              'lt',
+              'unid',
+              'sacos',
+            ], (val) => setState(() => unidadIng = val!)),
+          ],
+        ),
+      ),
+    ],
+  );
+
+  Widget _buildDatePicker() => InkWell(
+    onTap: () async {
+      DateTime? p = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now().add(const Duration(days: 30)),
+        firstDate: DateTime.now(),
+        lastDate: DateTime(2030),
+      );
+      if (p != null) setState(() => fechaVence = p);
+    },
+    child: Container(
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: fechaVence == null
+            ? const Color(0xFFFFF1F1)
+            : bgColor.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: fechaVence == null
+              ? Colors.red.withOpacity(0.3)
+              : Colors.transparent,
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            fechaVence == null
+                ? "Seleccionar fecha..."
+                : DateFormat('dd/MM/yyyy').format(fechaVence!),
+            style: GoogleFonts.dmSans(
+              color: fechaVence == null ? Colors.red : darkGreen,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          Icon(
+            Icons.calendar_today_rounded,
+            color: fechaVence == null ? Colors.red : accentGreen,
+            size: 20,
+          ),
+        ],
+      ),
+    ),
+  );
+
+  Widget _buildSubmitButton() => SizedBox(
+    width: double.infinity,
+    height: 55,
+    child: ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: darkGreen,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        elevation: 0,
+      ),
+      onPressed: () {
+        if (prodIng != null && cantCtrl.text.isNotEmpty && fechaVence != null) {
+          // 1. NOTIFICACIÓN E INTERFAZ INSTANTÁNEA
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                "✅ Lote registrado con éxito",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              backgroundColor: Color(0xFF2E7D52),
+              duration: Duration(seconds: 2),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+
+          // Captura de datos para el proceso asíncrono
+          final String pName = prodIng!;
+          final String cName = catIng!;
+          final double quantity = double.parse(cantCtrl.text);
+          final String unit = unidadIng;
+          final DateTime expiry = fechaVence!;
+
+          // 2. PROCESO EN SEGUNDO PLANO (Firebase)
+          _firestore.collection('Productos').add({
+            'nombre': pName,
+            'nombre_busqueda': pName.toUpperCase(), // Clave para búsqueda FIFO
+            'categoria': cName,
+            'cantidad': quantity,
+            'unidad': unit,
+            'fecha_vencimiento': Timestamp.fromDate(expiry),
+            'fecha_ingreso': FieldValue.serverTimestamp(),
+          });
+
+          // 3. LIMPIEZA INMEDIATA
+          setState(() {
+            cantCtrl.clear();
+            prodIng = null;
+            catIng = null;
+            fechaVence = null;
+          });
+        } else {
+          _showErrorSnackBar("⚠️ Por favor, completa todos los campos");
+        }
+      },
+      child: Text(
+        "REGISTRAR LOTE",
+        style: GoogleFonts.dmSans(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1.2,
+        ),
+      ),
+    ),
+  );
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.orange,
+        behavior: SnackBarBehavior.floating,
       ),
     );
   }
@@ -388,7 +371,7 @@ class _RegistroIngresoViewState extends State<RegistroIngresoView> {
     ),
     child: DropdownButtonHideUnderline(
       child: DropdownButtonFormField<String>(
-        value: v,
+        initialValue: v,
         isExpanded: true,
         items: i
             .map(

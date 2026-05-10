@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:alimentaperu_app/views/comensal/menu_diario_view.dart';
-import 'package:alimentaperu_app/views/comensal/estado_pagos_view.dart';
-// IMPORTANTE: Asegúrate de que esta ruta sea la correcta
-import 'package:alimentaperu_app/views/comensal/donacion_view.dart';
+// SOLUCIÓN: Rutas relativas porque los 3 archivos ahora son "vecinos" en la carpeta "comensal"
+import 'donacion_view.dart';
+import 'menu_diario_view.dart';
 
 class ComensalDashboardView extends StatelessWidget {
-  const ComensalDashboardView({Key? key}) : super(key: key);
+  const ComensalDashboardView({super.key});
 
   void _cerrarSesion(BuildContext context) {
     showDialog(
@@ -99,7 +98,7 @@ class ComensalDashboardView extends StatelessWidget {
       backgroundColor: bgColor,
       body: Column(
         children: [
-          // ── HEADER ──
+          // HEADER
           Container(
             color: darkGreen,
             child: SafeArea(
@@ -254,7 +253,7 @@ class ComensalDashboardView extends StatelessWidget {
             ),
           ),
 
-          // ── BODY ──
+          // BODY
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(18, 20, 18, 24),
@@ -271,6 +270,8 @@ class ComensalDashboardView extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 12),
+
+                  // TARJETA DE MENÚ
                   _buildDashboardCard(
                     context,
                     title: 'Ver Menú de Hoy',
@@ -287,34 +288,15 @@ class ComensalDashboardView extends StatelessWidget {
                       MaterialPageRoute(builder: (_) => const MenuDiarioView()),
                     ),
                   ),
-                  const SizedBox(height: 12),
-                  _buildDashboardCard(
-                    context,
-                    title: 'Mis Pagos y Cuotas',
-                    subtitle: 'Revisa tu estado de cuenta',
-                    icon: Icons.credit_card_rounded,
-                    accentColor: const Color(0xFF3B82C4),
-                    iconBg: const Color(0xFFE3F0FF),
-                    iconColor: const Color(0xFF1C5FA8),
-                    cardBorderColor: cardBorder,
-                    textDark: textDark,
-                    textMuted: textMuted,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const EstadoPagosView(),
-                      ),
-                    ),
-                  ),
 
-                  // ── NUEVO MÓDULO: DONACIÓN VOLUNTARIA ──
+                  // TARJETA DE DONACIÓN
                   const SizedBox(height: 12),
                   _buildDashboardCard(
                     context,
                     title: 'Donación Voluntaria',
                     subtitle: 'Apoya con dinero o abarrotes',
                     icon: Icons.volunteer_activism_rounded,
-                    accentColor: const Color(0xFFD65A5A), // Rojo/Rosa Solidario
+                    accentColor: const Color(0xFFD65A5A),
                     iconBg: const Color(0xFFFFF2F2),
                     iconColor: const Color(0xFFA83E3E),
                     cardBorderColor: cardBorder,

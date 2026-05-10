@@ -28,7 +28,6 @@ class _ReporteStockViewState extends State<ReporteStockView> {
     'Carnes': ['Pollo', 'Carne de res', 'Pescado'],
   };
 
-  // Colores Premium Alimenta Perú
   final Color darkGreen = const Color(0xFF1A4D2E);
   final Color bgColor = const Color(0xFFF0F4F1);
 
@@ -37,452 +36,217 @@ class _ReporteStockViewState extends State<ReporteStockView> {
     return Scaffold(
       backgroundColor: bgColor,
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // --- HEADER PREMIUM ---
-          Stack(
-            children: [
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.only(
-                  top: 60,
-                  bottom: 40,
-                  left: 22,
-                  right: 22,
-                ),
-                decoration: BoxDecoration(
-                  color: darkGreen,
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(40),
-                    bottomRight: Radius.circular(40),
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back_ios_new_rounded,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                        Expanded(
-                          child: Text(
-                            "STOCK ACTUAL",
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.dmSans(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              letterSpacing: 1.5,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 40),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Positioned(
-                top: -30,
-                right: -30,
-                child: Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.05),
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-          // --- CUERPO ---
+          _buildHeader(),
+          _buildFiltros(),
+          // MEJORA: Icono cuando no hay datos seleccionados
           Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.03),
-                            blurRadius: 15,
-                            offset: const Offset(0, 5),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildLabel("Categoría"),
-                          _buildDrop(
-                            catF,
-                            listaMaestra.keys.toList(),
-                            (val) => setState(() {
-                              catF = val;
-                              prodF = null;
-                            }),
-                          ),
-                          if (catF != null) ...[
-                            const SizedBox(height: 15),
-                            _buildLabel("Producto"),
-                            _buildDrop(
-                              prodF,
-                              listaMaestra[catF!]!,
-                              (val) => setState(() => prodF = val),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 25,
-                      vertical: 10,
-                    ),
-                    child: Text(
-                      "AUDITORÍA DE STOCK POR PRODUCTO",
-                      style: GoogleFonts.dmSans(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13,
-                        color: const Color(0xFF7A9E8A),
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                  ),
-
-                  if (prodF != null) _buildTablaDetalle(),
-
-                  const SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    child: Text(
-                      "RESUMEN DE ALERTAS",
-                      style: GoogleFonts.dmSans(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13,
-                        color: Colors.red[900],
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  _buildTablaAlertasGlobal(),
-                  const SizedBox(height: 40),
-                ],
-              ),
-            ),
+            child: prodF == null ? _buildNoDataIcon() : _buildResultados(),
           ),
         ],
       ),
     );
   }
 
-  // --- MÉTODOS ORIGINALES DE LÓGICA ---
-  Widget _buildTablaDetalle() {
+  Widget _buildHeader() => Container(
+    width: double.infinity,
+    padding: const EdgeInsets.only(top: 60, bottom: 40, left: 22, right: 22),
+    decoration: BoxDecoration(
+      color: darkGreen,
+      borderRadius: const BorderRadius.only(
+        bottomLeft: Radius.circular(40),
+        bottomRight: Radius.circular(40),
+      ),
+    ),
+    child: Row(
+      children: [
+        IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        Expanded(
+          child: Text(
+            "AUDITORÍA DE LOTES",
+            textAlign: TextAlign.center,
+            style: GoogleFonts.dmSans(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+        ),
+        const SizedBox(width: 40),
+      ],
+    ),
+  );
+
+  Widget _buildFiltros() => Padding(
+    padding: const EdgeInsets.all(20),
+    child: Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 15),
+        ],
+      ),
+      child: Column(
+        children: [
+          _buildDrop(
+            "Categoría",
+            catF,
+            listaMaestra.keys.toList(),
+            (v) => setState(() {
+              catF = v;
+              prodF = null;
+            }),
+          ),
+          if (catF != null) ...[
+            const SizedBox(height: 15),
+            _buildDrop(
+              "Producto",
+              prodF,
+              listaMaestra[catF!]!,
+              (v) => setState(() => prodF = v),
+            ),
+          ],
+        ],
+      ),
+    ),
+  );
+
+  // Widget para mostrar cuando no hay selección
+  Widget _buildNoDataIcon() => Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.inventory_2_outlined,
+          size: 80,
+          color: darkGreen.withOpacity(0.2),
+        ),
+        const SizedBox(height: 15),
+        Text(
+          "Selecciona un producto para auditar",
+          style: GoogleFonts.dmSans(
+            color: Colors.grey,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    ),
+  );
+
+  Widget _buildResultados() {
     return StreamBuilder<QuerySnapshot>(
       stream: _firestore
           .collection('Productos')
-          .where('nombre_busqueda', isEqualTo: prodF!.toUpperCase())
+          .where('nombre', isEqualTo: prodF)
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        // ¡AQUÍ ESTÁ LA MAGIA! Filtramos los documentos para ocultar los que tienen 0
-        var docs = snapshot.data!.docs.where((d) {
-          var data = d.data() as Map<String, dynamic>;
-          return (data['cantidad'] as num).toDouble() > 0;
-        }).toList();
-
-        double totalStock = 0;
+        var docs = snapshot.data!.docs
+            .where((d) => (d['cantidad'] ?? 0).toDouble() > 0)
+            .toList();
+        double total = docs.fold(
+          0,
+          (sum, d) => sum + (d['cantidad'] ?? 0).toDouble(),
+        );
 
         return Column(
           children: [
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: darkGreen,
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(15),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      "Nombre",
-                      style: GoogleFonts.dmSans(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 11,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      "Categoría",
-                      style: GoogleFonts.dmSans(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 11,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      "Vencimiento",
-                      style: GoogleFonts.dmSans(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 11,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      "Stock",
-                      style: GoogleFonts.dmSans(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 11,
-                      ),
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-                ],
+            _buildCardTotal(total),
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                itemCount: docs.length,
+                itemBuilder: (context, index) =>
+                    _buildLoteItem(docs[index].data() as Map<String, dynamic>),
               ),
             ),
-            if (docs.isEmpty)
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                padding: const EdgeInsets.all(20),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  border: Border(bottom: BorderSide(color: Color(0xFFF0F4F1))),
-                ),
-                child: Text(
-                  "No hay stock disponible para este producto.",
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.dmSans(color: Colors.grey),
-                ),
-              )
-            else
-              ...docs.map((d) {
-                var data = d.data() as Map<String, dynamic>;
-                totalStock += (data['cantidad'] as num).toDouble();
-                String fv = DateFormat(
-                  'dd/MM/yy',
-                ).format((data['fecha_vencimiento'] as Timestamp).toDate());
-
-                return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  padding: const EdgeInsets.all(12),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    border: Border(
-                      bottom: BorderSide(color: Color(0xFFF0F4F1)),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          data['nombre'],
-                          style: GoogleFonts.dmSans(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                            color: const Color(0xFF1C3326),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          data['categoria'] ?? "-",
-                          style: GoogleFonts.dmSans(
-                            fontSize: 11,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          fv,
-                          style: GoogleFonts.dmSans(
-                            fontSize: 11,
-                            color: Colors.redAccent,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          "${data['cantidad']} ${data['unidad']}",
-                          style: GoogleFonts.dmSans(
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFF2E7D52),
-                          ),
-                          textAlign: TextAlign.right,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-            _buildCardTotal(totalStock),
           ],
         );
       },
     );
   }
 
-  Widget _buildTablaAlertasGlobal() {
-    return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('Productos').snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return const SizedBox();
-        Map<String, double> r = {};
-        for (var doc in snapshot.data!.docs) {
-          r[doc['nombre']] =
-              (r[doc['nombre']] ?? 0) + (doc['cantidad'] as num).toDouble();
-        }
-        List<Map<String, dynamic>> alertas = [];
-        listaMaestra.forEach((cat, prods) {
-          for (var p in prods) {
-            double s = r[p] ?? 0;
-            if (s <= 2) alertas.add({'p': p, 'c': cat, 's': s});
-          }
-        });
+  Widget _buildLoteItem(Map<String, dynamic> data) {
+    final DateTime now = DateTime.now();
+    final dynamic fechaData = data['fecha_vencimiento'];
 
-        return Column(
-          children: alertas.map((item) {
-            bool es0 =
-                item['s'] <=
-                0; // Ajustado para capturar 0 o negativos por si acaso
-            return Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.02),
-                    blurRadius: 8,
+    String fvString = "Sin fecha";
+    Color estadoColor = Colors.green; // Verde por defecto (Saludable)
+    bool esAlerta = false;
+
+    if (fechaData != null && fechaData is Timestamp) {
+      DateTime fvDate = fechaData.toDate();
+      fvString = DateFormat('dd/MM/yyyy').format(fvDate);
+      int diasRestantes = fvDate.difference(now).inDays;
+
+      // LÓGICA DE COLORES SOLICITADA
+      if (diasRestantes <= 0) {
+        estadoColor = Colors.red; // Vencido
+        esAlerta = true;
+      } else if (diasRestantes <= 7) {
+        estadoColor = Colors.orange; // Alerta 7 días antes
+        esAlerta = true;
+      } else {
+        estadoColor = Colors.green; // Saludable
+      }
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(
+          color: esAlerta ? estadoColor.withOpacity(0.3) : Colors.transparent,
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.circle,
+            size: 12,
+            color: estadoColor,
+          ), // Indicador de estado
+          const SizedBox(width: 15),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  data['nombre'] ?? "Insumo",
+                  style: GoogleFonts.dmSans(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "Vence: $fvString",
+                  style: GoogleFonts.dmSans(
+                    fontSize: 12,
+                    color: estadoColor,
+                    fontWeight: FontWeight.bold,
                   ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      item['p'],
-                      style: GoogleFonts.dmSans(
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF1C3326),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      "${item['s']}",
-                      style: GoogleFonts.dmSans(
-                        color: es0 ? Colors.red : Colors.orange,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: es0 ? Colors.red[50] : Colors.orange[50],
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        es0 ? "QUIEBRE" : "BAJO",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.dmSans(
-                          color: es0 ? Colors.red : Colors.orange,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }).toList(),
-        );
-      },
+                ),
+              ],
+            ),
+          ),
+          Text(
+            "${data['cantidad'] ?? 0} ${data['unidad'] ?? 'kg'}",
+            style: GoogleFonts.dmSans(
+              fontWeight: FontWeight.bold,
+              color: darkGreen,
+            ),
+          ),
+        ],
+      ),
     );
   }
-
-  Widget _buildLabel(String t) => Padding(
-    padding: const EdgeInsets.only(bottom: 8),
-    child: Text(
-      t,
-      style: GoogleFonts.dmSans(
-        fontSize: 11,
-        fontWeight: FontWeight.bold,
-        color: darkGreen.withOpacity(0.7),
-      ),
-    ),
-  );
-
-  Widget _buildDrop(String? v, List<String> i, Function(String?) onChanged) =>
-      Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        decoration: BoxDecoration(
-          color: bgColor.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButtonFormField<String>(
-            value: v,
-            isExpanded: true,
-            items: i
-                .map(
-                  (e) => DropdownMenuItem(
-                    value: e,
-                    child: Text(e, style: GoogleFonts.dmSans(fontSize: 14)),
-                  ),
-                )
-                .toList(),
-            onChanged: onChanged,
-            decoration: const InputDecoration(border: InputBorder.none),
-          ),
-        ),
-      );
 
   Widget _buildCardTotal(double t) => Container(
     margin: const EdgeInsets.all(20),
@@ -502,7 +266,7 @@ class _ReporteStockViewState extends State<ReporteStockView> {
           ),
         ),
         Text(
-          "${t.toStringAsFixed(1)}",
+          t.toStringAsFixed(1),
           style: GoogleFonts.dmSans(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -510,6 +274,31 @@ class _ReporteStockViewState extends State<ReporteStockView> {
           ),
         ),
       ],
+    ),
+  );
+
+  Widget _buildDrop(
+    String h,
+    String? v,
+    List<String> i,
+    Function(String?) onC,
+  ) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 12),
+    decoration: BoxDecoration(
+      color: bgColor.withOpacity(0.5),
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: DropdownButtonHideUnderline(
+      child: DropdownButtonFormField<String>(
+        initialValue: v,
+        isExpanded: true,
+        hint: Text(h),
+        items: i
+            .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+            .toList(),
+        onChanged: onC,
+        decoration: const InputDecoration(border: InputBorder.none),
+      ),
     ),
   );
 }

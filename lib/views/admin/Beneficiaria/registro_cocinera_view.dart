@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class RegistroCocineraView extends StatefulWidget {
-  const RegistroCocineraView({Key? key}) : super(key: key);
+  const RegistroCocineraView({super.key});
 
   @override
   State<RegistroCocineraView> createState() => _RegistroCocineraViewState();
