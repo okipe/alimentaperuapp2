@@ -273,7 +273,7 @@ class _PadronBeneficiariosViewState extends State<PadronBeneficiariosView> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.12),
+                    color: Colors.white.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(18),
                   ),
                   child: TextField(
@@ -284,7 +284,7 @@ class _PadronBeneficiariosViewState extends State<PadronBeneficiariosView> {
                       icon: const Icon(Icons.search, color: Colors.white70),
                       hintText: "Buscar por nombre o DNI...",
                       hintStyle: TextStyle(
-                        color: Colors.white.withOpacity(0.4),
+                        color: Colors.white.withValues(alpha: 0.4),
                       ),
                       border: InputBorder.none,
                     ),
@@ -396,7 +396,7 @@ class _PadronBeneficiariosViewState extends State<PadronBeneficiariosView> {
         labelText: label,
         prefixIcon: Icon(icon, color: darkGreen),
         filled: true,
-        fillColor: bgColor.withOpacity(0.4),
+        fillColor: bgColor.withValues(alpha: 0.4),
         counterText: "",
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),

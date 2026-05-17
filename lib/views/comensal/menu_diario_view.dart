@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:alimentaperu_app/viewmodels/menu_diario_viewmodel.dart';
-import 'package:alimentaperu_app/viewmodels/ia_service.dart';
 
 class MenuDiarioView extends StatefulWidget {
   const MenuDiarioView({super.key});
@@ -17,7 +16,6 @@ class _MenuDiarioViewState extends State<MenuDiarioView> {
   final Color primaryGreen = const Color(0xFF1B5E20);
   final Color accentGreen = const Color(0xFF2E7D32);
 
-  // Notificación ultra-rápida (1 segundo)
   void _notificar(String msg, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -31,7 +29,6 @@ class _MenuDiarioViewState extends State<MenuDiarioView> {
     );
   }
 
-  // Confirmación instantánea antes de reservar
   Future<void> _intentarReserva(MenuDiarioViewModel menuVM) async {
     bool? confirmar = await showDialog<bool>(
       context: context,
@@ -73,7 +70,6 @@ class _MenuDiarioViewState extends State<MenuDiarioView> {
     final userRef = FirebaseFirestore.instance
         .collection('usuarios')
         .doc(user.uid);
-
     final userDoc = await userRef.get();
     int racionesHoy = 0;
 
@@ -91,10 +87,20 @@ class _MenuDiarioViewState extends State<MenuDiarioView> {
 
     bool exito = await menuVM.reservarRacion();
     if (exito) {
+      // 1. Guardamos en el documento del usuario para el control de límites de raciones
       await userRef.set({
         'conteoReservas': racionesHoy + 1,
         'fechaUltimaReserva': hoy,
       }, SetOptions(merge: true));
+
+      // 2. NUEVO: Registramos la reserva de manera independiente con su respectiva información
+      await userRef.collection('historial_reservas').add({
+        'fecha': hoy,
+        'menu': menuVM.platoPrincipal,
+        'cantidad': 1, // Se registra una ración por cada pulsación exitosa
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+
       _notificar("✅ ¡Reserva confirmada!", Colors.green);
     }
   }
@@ -102,6 +108,7 @@ class _MenuDiarioViewState extends State<MenuDiarioView> {
   @override
   Widget build(BuildContext context) {
     final menuVM = Provider.of<MenuDiarioViewModel>(context);
+    final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF4F7F5),
@@ -133,7 +140,6 @@ class _MenuDiarioViewState extends State<MenuDiarioView> {
                     ),
                   ),
                   Padding(
-                    // 🛡️ CORRECCIÓN PANTALLA ROJA: Se cambió el padding negativo a 10 positivo
                     padding: const EdgeInsets.fromLTRB(24, 10, 24, 24),
                     child: Column(
                       children: [
@@ -144,7 +150,7 @@ class _MenuDiarioViewState extends State<MenuDiarioView> {
                             borderRadius: BorderRadius.circular(30),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
+                                color: Colors.black.withValues(alpha: 0.05),
                                 blurRadius: 25,
                                 offset: const Offset(0, 10),
                               ),
@@ -171,7 +177,6 @@ class _MenuDiarioViewState extends State<MenuDiarioView> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  // 🛡️ CORRECCIÓN ÍCONO: Se cambió 'some_count_icon' por 'Icons.groups'
                                   const Icon(
                                     Icons.groups,
                                     size: 20,
@@ -187,26 +192,6 @@ class _MenuDiarioViewState extends State<MenuDiarioView> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 25),
-                              ActionChip(
-                                avatar: const Icon(
-                                  Icons.auto_awesome,
-                                  size: 16,
-                                  color: Colors.blue,
-                                ),
-                                label: const Text(
-                                  "VER ANÁLISIS NUTRICIONAL",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                onPressed: () =>
-                                    _invocarIA(menuVM.platoPrincipal),
-                                backgroundColor: Colors.blue.withOpacity(0.1),
-                                side: BorderSide.none,
-                                shape: const StadiumBorder(),
-                              ),
                             ],
                           ),
                         ),
@@ -218,7 +203,7 @@ class _MenuDiarioViewState extends State<MenuDiarioView> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: accentGreen,
                               elevation: 8,
-                              shadowColor: accentGreen.withOpacity(0.4),
+                              shadowColor: accentGreen.withValues(alpha: 0.4),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(22),
                               ),
@@ -238,61 +223,160 @@ class _MenuDiarioViewState extends State<MenuDiarioView> {
                             ),
                           ),
                         ),
+
+                        // --- SECCIÓN AÑADIDA: HISTORIAL DE RESERVAS ---
+                        const SizedBox(height: 40),
+                        if (user != null) ...[
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.bookmark_added,
+                                color: primaryGreen,
+                                size: 24,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                "Mis Reservas de Hoy",
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w800,
+                                  color: const Color(0xFF2D3436),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 15),
+                          StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('usuarios')
+                                .doc(user.uid)
+                                .collection('historial_reservas')
+                                .orderBy('timestamp', descending: true)
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: LinearProgressIndicator(),
+                                );
+                              }
+
+                              if (!snapshot.hasData ||
+                                  snapshot.data!.docs.isEmpty) {
+                                return Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Text(
+                                    "Aún no cuentas con reservas registradas.",
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.urbanist(
+                                      color: Colors.grey[500],
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              final reservas = snapshot.data!.docs;
+
+                              return ListView.separated(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: reservas.length,
+                                separatorBuilder: (_, _) =>
+                                    const SizedBox(height: 12),
+                                itemBuilder: (context, index) {
+                                  final item =
+                                      reservas[index].data()
+                                          as Map<String, dynamic>;
+                                  final String fecha = item['fecha'] ?? '';
+                                  final String menu = item['menu'] ?? 'Menú';
+                                  final int cantidad = item['cantidad'] ?? 1;
+
+                                  return Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                      vertical: 16,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withValues(
+                                            alpha: 0.02,
+                                          ),
+                                          blurRadius: 10,
+                                          offset: const Offset(0, 4),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              menu.toUpperCase(),
+                                              style: GoogleFonts.urbanist(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 16,
+                                                color: const Color(0xFF2D3436),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              "Fecha: $fecha",
+                                              style: GoogleFonts.urbanist(
+                                                color: Colors.grey[600],
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 14,
+                                            vertical: 8,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: primaryGreen.withValues(
+                                              alpha: 0.1,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            "$cantidad Ración(es)",
+                                            style: GoogleFonts.urbanist(
+                                              color: primaryGreen,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ],
                       ],
                     ),
                   ),
                 ],
               ),
             ),
-    );
-  }
-
-  void _invocarIA(String plato) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Center(child: CircularProgressIndicator()),
-    );
-    String res = await IAService.obtenerInfoNutricional(plato);
-    if (!mounted) return;
-    Navigator.pop(context);
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-      ),
-      builder: (context) => Padding(
-        padding: const EdgeInsets.all(30),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 50,
-              height: 5,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              "Nutri-IA 🥗",
-              style: GoogleFonts.urbanist(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 15),
-            Text(
-              res,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16, height: 1.5),
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
     );
   }
 }

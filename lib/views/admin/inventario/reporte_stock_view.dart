@@ -66,7 +66,7 @@ class _ReporteStockViewState extends State<ReporteStockView> {
         ),
         Expanded(
           child: Text(
-            "AUDITORÍA DE LOTES",
+            "INVENTARIO DE PRODUCTOS",
             textAlign: TextAlign.center,
             style: GoogleFonts.dmSans(
               color: Colors.white,
@@ -88,7 +88,10 @@ class _ReporteStockViewState extends State<ReporteStockView> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 15),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 15,
+          ),
         ],
       ),
       child: Column(
@@ -124,7 +127,7 @@ class _ReporteStockViewState extends State<ReporteStockView> {
         Icon(
           Icons.inventory_2_outlined,
           size: 80,
-          color: darkGreen.withOpacity(0.2),
+          color: darkGreen.withValues(alpha: 0.2),
         ),
         const SizedBox(height: 15),
         Text(
@@ -153,8 +156,10 @@ class _ReporteStockViewState extends State<ReporteStockView> {
             .where((d) => (d['cantidad'] ?? 0).toDouble() > 0)
             .toList();
         double total = docs.fold(
-          0,
-          (sum, d) => sum + (d['cantidad'] ?? 0).toDouble(),
+          0.0,
+
+          (valorAcumulado, d) =>
+              valorAcumulado + (d['cantidad'] ?? 0).toDouble(),
         );
 
         return Column(
@@ -206,7 +211,9 @@ class _ReporteStockViewState extends State<ReporteStockView> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
         border: Border.all(
-          color: esAlerta ? estadoColor.withOpacity(0.3) : Colors.transparent,
+          color: esAlerta
+              ? estadoColor.withValues(alpha: 0.3)
+              : Colors.transparent,
         ),
       ),
       child: Row(
@@ -285,7 +292,7 @@ class _ReporteStockViewState extends State<ReporteStockView> {
   ) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 12),
     decoration: BoxDecoration(
-      color: bgColor.withOpacity(0.5),
+      color: bgColor.withValues(alpha: 0.5),
       borderRadius: BorderRadius.circular(12),
     ),
     child: DropdownButtonHideUnderline(

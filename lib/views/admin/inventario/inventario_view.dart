@@ -50,7 +50,7 @@ class InventarioView extends StatelessWidget {
                         Text(
                           "ALMACÉN CENTRAL",
                           style: GoogleFonts.dmSans(
-                            color: Colors.white.withOpacity(0.6),
+                            color: Colors.white.withValues(alpha: 0.6),
                             fontWeight: FontWeight.bold,
                             fontSize: 11,
                             letterSpacing: 2,
@@ -80,7 +80,7 @@ class InventarioView extends StatelessWidget {
                   height: 150,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.05),
+                    color: Colors.white.withValues(alpha: 0.05),
                   ),
                 ),
               ),
@@ -118,7 +118,7 @@ class InventarioView extends StatelessWidget {
                   const SizedBox(height: 16),
                   _buildInventoryCard(
                     context,
-                    title: "Ingreso de Lotes",
+                    title: "Ingreso de Productos",
                     subtitle: "Registro de donaciones o compras",
                     icon: Icons.add_box_rounded,
                     accentColor: accentGreen,
@@ -165,7 +165,9 @@ class InventarioView extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(22),
-            border: Border.all(color: const Color(0xFFBDDAC8).withOpacity(0.4)),
+            border: Border.all(
+              color: const Color(0xFFBDDAC8).withValues(alpha: 0.4),
+            ),
           ),
           child: Stack(
             children: [
@@ -224,7 +226,7 @@ class InventarioView extends StatelessWidget {
                     ),
                     Icon(
                       Icons.chevron_right_rounded,
-                      color: accentColor.withOpacity(0.8),
+                      color: accentColor.withValues(alpha: 0.8),
                     ),
                   ],
                 ),

@@ -95,7 +95,7 @@ class GestionBeneficiariasView extends StatelessWidget {
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.2,
-                      color: darkGreen.withOpacity(0.6),
+                      color: darkGreen.withValues(alpha: 0.6),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -161,7 +161,7 @@ class GestionBeneficiariasView extends StatelessWidget {
           borderRadius: BorderRadius.circular(22),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),

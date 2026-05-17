@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class InventarioService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -26,7 +27,7 @@ class InventarioService {
         });
       }
     } catch (e) {
-      print("Error al descontar stock: $e");
+      debugPrint("Error al descontar stock: $e");
     }
   }
 }

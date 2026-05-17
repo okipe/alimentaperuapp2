@@ -105,9 +105,9 @@ class _LoginViewState extends State<LoginView> {
                       height: 90,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white.withOpacity(0.1),
+                        color: Colors.white.withValues(alpha: 0.1),
                         border: Border.all(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           width: 1.5,
                         ),
                       ),
@@ -132,7 +132,7 @@ class _LoginViewState extends State<LoginView> {
                       'Inicia sesión para continuar',
                       style: GoogleFonts.urbanist(
                         fontSize: 13,
-                        color: Colors.white.withOpacity(0.55),
+                        color: Colors.white.withValues(alpha: 0.55),
                       ),
                     ),
                   ],
@@ -147,7 +147,7 @@ class _LoginViewState extends State<LoginView> {
                   height: 130,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(0.05),
+                    color: Colors.white.withValues(alpha: 0.05),
                   ),
                 ),
               ),
@@ -202,7 +202,7 @@ class _LoginViewState extends State<LoginView> {
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(13),
                         borderSide: BorderSide(
-                          color: darkGreen.withOpacity(0.1),
+                          color: darkGreen.withValues(alpha: 0.1),
                           width: 0.5,
                         ),
                       ),
@@ -228,7 +228,9 @@ class _LoginViewState extends State<LoginView> {
                       onPressed: viewModel.isLoading ? null : _login,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: darkGreen,
-                        disabledBackgroundColor: darkGreen.withOpacity(0.6),
+                        disabledBackgroundColor: darkGreen.withValues(
+                          alpha: 0.6,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(13),
                         ),
@@ -276,7 +278,10 @@ class _LoginViewState extends State<LoginView> {
                   const SizedBox(height: 24),
 
                   // Divisor
-                  Divider(color: darkGreen.withOpacity(0.1), thickness: 0.5),
+                  Divider(
+                    color: darkGreen.withValues(alpha: 0.1),
+                    thickness: 0.5,
+                  ),
                   const SizedBox(height: 20),
 
                   // Registro
@@ -350,7 +355,7 @@ class _LoginViewState extends State<LoginView> {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(13),
           borderSide: BorderSide(
-            color: const Color(0xFF1A4D2E).withOpacity(0.1),
+            color: const Color(0xFF1A4D2E).withValues(alpha: 0.1),
             width: 0.5,
           ),
         ),

@@ -15,26 +15,52 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   bool _isLoading = false;
 
   Future<void> _resetPassword() async {
+    // 1. Validar el formulario antes de empezar
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isLoading = true);
+
     try {
+      // 2. Intento de enviar el correo de recuperación
       await FirebaseAuth.instance.sendPasswordResetEmail(
         email: _emailController.text.trim(),
       );
+
+      // 3. Si todo sale bien y la pantalla sigue abierta, mostrar éxito
       if (mounted) {
         _mostrarExito();
       }
     } on FirebaseAuthException catch (e) {
+      // 4. Manejo de errores específicos de Firebase
       String mensaje = "Error al enviar el correo";
+
       if (e.code == 'user-not-found') {
         mensaje = "Este correo no está registrado";
+      } else if (e.code == 'invalid-email') {
+        mensaje = "El formato del correo no es válido";
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(mensaje), backgroundColor: Colors.red),
-      );
+
+      // 5. IMPORTANTE: Validar mounted antes de usar el context en el catch
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(mensaje), backgroundColor: Colors.red),
+        );
+      }
+    } catch (e) {
+      // Manejo de cualquier otro error inesperado
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Ocurrió un error inesperado"),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      }
     } finally {
-      if (mounted) setState(() => _isLoading = false);
+      // 6. Quitar el estado de carga solo si la pantalla sigue activa
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 

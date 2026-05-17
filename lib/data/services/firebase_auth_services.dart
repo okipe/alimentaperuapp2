@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import '../models/usuario_model.dart';
 
 class FirebaseAuthService {
@@ -15,7 +16,7 @@ class FirebaseAuthService {
       );
       return credential.user;
     } catch (e) {
-      print("Error en el login: $e");
+      debugPrint("Error en el login: $e");
       return null;
     }
   }
@@ -32,7 +33,7 @@ class FirebaseAuthService {
         return UsuarioModel.fromFirestore(doc);
       }
     } catch (e) {
-      print("Error obteniendo datos: $e");
+      debugPrint("Error obteniendo datos: $e");
     }
     return null;
   }

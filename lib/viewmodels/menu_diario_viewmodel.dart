@@ -30,7 +30,7 @@ class MenuDiarioViewModel extends ChangeNotifier {
             if (snapshot.docs.isNotEmpty) {
               var lastDoc = snapshot.docs.first;
               _ultimoMenuId = lastDoc.id;
-              var data = lastDoc.data() as Map<String, dynamic>;
+              var data = lastDoc.data();
 
               _platoPrincipal = data['plato'] ?? 'Menú no disponible';
 

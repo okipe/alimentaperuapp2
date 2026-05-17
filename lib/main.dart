@@ -8,7 +8,6 @@ import 'firebase_options.dart';
 // ViewModels
 import 'package:alimentaperu_app/viewmodels/login_viewmodel.dart';
 import 'package:alimentaperu_app/viewmodels/menu_diario_viewmodel.dart';
-import 'package:alimentaperu_app/viewmodels/estado_pagos_viewmodel.dart';
 import 'package:alimentaperu_app/viewmodels/donacion_viewmodel.dart';
 
 // Vistas Generales
@@ -19,7 +18,6 @@ import 'package:alimentaperu_app/views/forgot_password_view.dart';
 
 // Vistas Administrativas
 import 'package:alimentaperu_app/views/admin/admin_dashboard.dart';
-
 import 'package:alimentaperu_app/views/admin/reportes_view.dart';
 import 'package:alimentaperu_app/views/admin/inventario/inventario_view.dart';
 import 'package:alimentaperu_app/views/admin/inventario/registro_ingreso_view.dart';
@@ -50,7 +48,6 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => LoginViewModel()),
         ChangeNotifierProvider(create: (_) => MenuDiarioViewModel()),
-        ChangeNotifierProvider(create: (_) => EstadoPagosViewModel()),
         ChangeNotifierProvider(create: (_) => DonacionViewModel()),
       ],
       child: MaterialApp(
@@ -71,25 +68,21 @@ class MyApp extends StatelessWidget {
 
           // Rutas Administrativas
           '/dashboard': (context) => const AdminDashboard(),
-          // Se quitó el 'const' para evitar el error de "Not a constant expression"
           '/registro_menu': (context) => RegistroMenuView(),
           '/beneficiarias': (context) => const GestionBeneficiariasView(),
-          '/reportes': (context) => const ReportesView(),
+          '/reportes': (context) => const ReportesDashboardView(),
           '/inventario': (context) => const InventarioView(),
           '/registro_ingreso': (context) => const RegistroIngresoView(),
           '/registro_salida': (context) => const RegistroSalidaView(),
           '/reporte_stock': (context) => const ReporteStockView(),
+          '/padron_lista': (context) => const PadronBeneficiariosView(),
+          '/registro_cocinera': (context) => const RegistroCocineraView(),
+          '/gestion_donaciones': (context) => const GestionDonacionesView(),
 
           // Módulo Comensal
           '/comensal_dashboard': (context) => const ComensalDashboardView(),
           '/donacion': (context) => const DonacionView(),
-          // Se quitó el 'const' para evitar el error de "Not a constant expression"
           '/menu_diario': (context) => MenuDiarioView(),
-
-          // Módulo Beneficiaria
-          '/padron_lista': (context) => const PadronBeneficiariosView(),
-          '/registro_cocinera': (context) => const RegistroCocineraView(),
-          '/gestion_donaciones': (context) => const GestionDonacionesView(),
         },
       ),
     );

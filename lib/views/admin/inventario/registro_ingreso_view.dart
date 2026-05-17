@@ -56,7 +56,7 @@ class _RegistroIngresoViewState extends State<RegistroIngresoView> {
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.03),
+                      color: Colors.black.withValues(alpha: 0.03),
                       blurRadius: 20,
                       offset: const Offset(0, 5),
                     ),
@@ -135,7 +135,7 @@ class _RegistroIngresoViewState extends State<RegistroIngresoView> {
             ),
             Expanded(
               child: Text(
-                "INGRESO DE LOTES",
+                "INGRESO DE PRODUCTOS",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.dmSans(
                   color: Colors.white,
@@ -155,7 +155,7 @@ class _RegistroIngresoViewState extends State<RegistroIngresoView> {
   Widget _buildReadOnlyDate() => Container(
     padding: const EdgeInsets.all(15),
     decoration: BoxDecoration(
-      color: bgColor.withOpacity(0.5),
+      color: bgColor.withValues(alpha: 0.5),
       borderRadius: BorderRadius.circular(12),
     ),
     child: Row(
@@ -163,7 +163,7 @@ class _RegistroIngresoViewState extends State<RegistroIngresoView> {
         Icon(
           Icons.verified_user_outlined,
           size: 20,
-          color: darkGreen.withOpacity(0.5),
+          color: darkGreen.withValues(alpha: 0.5),
         ),
         const SizedBox(width: 10),
         Text(
@@ -196,7 +196,7 @@ class _RegistroIngresoViewState extends State<RegistroIngresoView> {
               style: GoogleFonts.dmSans(fontWeight: FontWeight.w600),
               decoration: InputDecoration(
                 filled: true,
-                fillColor: bgColor.withOpacity(0.5),
+                fillColor: bgColor.withValues(alpha: 0.5),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -243,11 +243,11 @@ class _RegistroIngresoViewState extends State<RegistroIngresoView> {
       decoration: BoxDecoration(
         color: fechaVence == null
             ? const Color(0xFFFFF1F1)
-            : bgColor.withOpacity(0.5),
+            : bgColor.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: fechaVence == null
-              ? Colors.red.withOpacity(0.3)
+              ? Colors.red.withValues(alpha: 0.3)
               : Colors.transparent,
         ),
       ),
@@ -327,7 +327,7 @@ class _RegistroIngresoViewState extends State<RegistroIngresoView> {
         }
       },
       child: Text(
-        "REGISTRAR LOTE",
+        "GUARDAR PRODUCTO",
         style: GoogleFonts.dmSans(
           color: Colors.white,
           fontWeight: FontWeight.bold,
@@ -354,7 +354,7 @@ class _RegistroIngresoViewState extends State<RegistroIngresoView> {
       style: GoogleFonts.dmSans(
         fontSize: 10,
         fontWeight: FontWeight.bold,
-        color: accentGreen.withOpacity(0.7),
+        color: accentGreen.withValues(alpha: 0.7),
       ),
     ),
   );
@@ -366,7 +366,7 @@ class _RegistroIngresoViewState extends State<RegistroIngresoView> {
   ) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 12),
     decoration: BoxDecoration(
-      color: bgColor.withOpacity(0.5),
+      color: bgColor.withValues(alpha: 0.5),
       borderRadius: BorderRadius.circular(12),
     ),
     child: DropdownButtonHideUnderline(

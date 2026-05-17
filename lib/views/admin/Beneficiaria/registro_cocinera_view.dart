@@ -13,7 +13,9 @@ class _RegistroCocineraViewState extends State<RegistroCocineraView> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Controladores para capturar el texto de los inputs
-  final TextEditingController _comedorCtrl = TextEditingController();
+  final TextEditingController _comedorCtrl = TextEditingController(
+    text: "Villa el Salvador",
+  ); // Valor por defecto para pruebas
   final TextEditingController _nombreCtrl = TextEditingController();
   final TextEditingController _apellidoCtrl = TextEditingController();
   final TextEditingController _edadCtrl = TextEditingController();
@@ -52,9 +54,9 @@ class _RegistroCocineraViewState extends State<RegistroCocineraView> {
         'fecha_registro': FieldValue.serverTimestamp(),
       });
 
-      // Limpiar formulario al instante
+      // Limpiar formulario al guardar exitosamente
       setState(() {
-        _comedorCtrl.clear();
+        ///_comedorCtrl.clear();
         _nombreCtrl.clear();
         _apellidoCtrl.clear();
         _edadCtrl.clear();
@@ -149,7 +151,8 @@ class _RegistroCocineraViewState extends State<RegistroCocineraView> {
                       height: 130,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white.withOpacity(0.05),
+                        // ignore: deprecated_member_use
+                        color: Colors.white.withValues(alpha: 0.05),
                       ),
                     ),
                   ),
@@ -171,7 +174,7 @@ class _RegistroCocineraViewState extends State<RegistroCocineraView> {
                             Text(
                               "GESTIÓN DE PERSONAL",
                               style: GoogleFonts.dmSans(
-                                color: Colors.white.withOpacity(0.6),
+                                color: Colors.white.withValues(alpha: 0.6),
                                 fontSize: 11,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1.5,
@@ -213,7 +216,7 @@ class _RegistroCocineraViewState extends State<RegistroCocineraView> {
                       borderRadius: BorderRadius.circular(25),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.03),
+                          color: Colors.black.withValues(alpha: 0.03),
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         ),
@@ -347,7 +350,7 @@ class _RegistroCocineraViewState extends State<RegistroCocineraView> {
           style: GoogleFonts.dmSans(
             fontSize: 10,
             fontWeight: FontWeight.bold,
-            color: accentColor.withOpacity(0.7),
+            color: accentColor.withValues(alpha: 0.7),
           ),
         ),
         const SizedBox(height: 8),
@@ -356,9 +359,13 @@ class _RegistroCocineraViewState extends State<RegistroCocineraView> {
           keyboardType: isNumber ? TextInputType.number : TextInputType.text,
           style: GoogleFonts.dmSans(fontSize: 15, fontWeight: FontWeight.w500),
           decoration: InputDecoration(
-            prefixIcon: Icon(icon, size: 20, color: darkGreen.withOpacity(0.3)),
+            prefixIcon: Icon(
+              icon,
+              size: 20,
+              color: darkGreen.withValues(alpha: 0.3),
+            ),
             filled: true,
-            fillColor: bgColor.withOpacity(0.5),
+            fillColor: bgColor.withValues(alpha: 0.5),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
@@ -383,7 +390,7 @@ class _RegistroCocineraViewState extends State<RegistroCocineraView> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.withOpacity(0.1)),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
       ),
       child: Row(
         children: [

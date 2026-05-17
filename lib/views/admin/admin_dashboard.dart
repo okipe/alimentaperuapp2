@@ -112,7 +112,7 @@ class AdminDashboard extends StatelessWidget {
                       height: 160,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white.withOpacity(0.05),
+                        color: Colors.white.withValues(alpha: 0.05),
                       ),
                     ),
                   ),
@@ -124,7 +124,7 @@ class AdminDashboard extends StatelessWidget {
                       height: 90,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white.withOpacity(0.04),
+                        color: Colors.white.withValues(alpha: 0.04),
                       ),
                     ),
                   ),
@@ -142,7 +142,7 @@ class AdminDashboard extends StatelessWidget {
                                   width: 30,
                                   height: 30,
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.15),
+                                    color: Colors.white.withValues(alpha: 0.15),
                                     borderRadius: BorderRadius.circular(9),
                                   ),
                                   child: const Center(
@@ -158,7 +158,7 @@ class AdminDashboard extends StatelessWidget {
                                   style: GoogleFonts.dmSans(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
-                                    color: Colors.white.withOpacity(0.8),
+                                    color: Colors.white.withValues(alpha: 0.8),
                                   ),
                                 ),
                               ],
@@ -170,9 +170,9 @@ class AdminDashboard extends StatelessWidget {
                                 height: 32,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: Colors.white.withOpacity(0.1),
+                                  color: Colors.white.withValues(alpha: 0.1),
                                   border: Border.all(
-                                    color: Colors.white.withOpacity(0.2),
+                                    color: Colors.white.withValues(alpha: 0.2),
                                   ),
                                 ),
                                 child: const Icon(
@@ -190,19 +190,31 @@ class AdminDashboard extends StatelessWidget {
                           style: GoogleFonts.dmSans(
                             fontSize: 11,
                             letterSpacing: 1.4,
-                            color: Colors.white.withOpacity(0.5),
+                            color: Colors.white.withValues(alpha: 0.5),
                           ),
                         ),
                         const SizedBox(height: 3),
                         Text(
                           '¡Hola, $userName!',
                           style: GoogleFonts.playfairDisplay(
-                            fontSize: 32,
+                            fontSize: 28,
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
                             height: 1.15,
                           ),
                         ),
+                        Text(
+                          "COMEDOR VILLA EL SALVADOR",
+                          style: GoogleFonts.dmSans(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white.withOpacity(
+                              0.8,
+                            ), // Color blanco suave para no saturar
+                            letterSpacing: 1.2,
+                          ),
+                        ),
+
                         const SizedBox(height: 12),
                         Container(
                           padding: const EdgeInsets.symmetric(
@@ -210,10 +222,10 @@ class AdminDashboard extends StatelessWidget {
                             vertical: 8,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.1),
+                            color: Colors.white.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: Colors.white.withOpacity(0.15),
+                              color: Colors.white.withValues(alpha: 0.15),
                             ),
                           ),
                           child: Row(
@@ -230,7 +242,7 @@ class AdminDashboard extends StatelessWidget {
                                 style: GoogleFonts.dmSans(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
-                                  color: Colors.white.withOpacity(0.8),
+                                  color: Colors.white.withValues(alpha: 0.8),
                                 ),
                               ),
                             ],
@@ -354,10 +366,10 @@ class AdminDashboard extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: cardBorderColor.withOpacity(0.55)),
+            border: Border.all(color: cardBorderColor.withValues(alpha: 0.55)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.015),
+                color: Colors.black.withValues(alpha: 0.015),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),

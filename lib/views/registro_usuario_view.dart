@@ -24,12 +24,7 @@ class _RegistroUsuarioViewState extends State<RegistroUsuarioView> {
   final _emailCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
 
-  final List<String> _comedores = [
-    'Comedor Santa Rosa',
-    'Comedor Virgen de la Puerta',
-    'Comedor San Martín',
-    'Comedor Villa El Salvador',
-  ];
+  final List<String> _comedores = ['Comedor Villa El Salvador'];
   String? _comedorSeleccionado;
 
   Future<void> _ejecutarRegistro() async {

@@ -99,7 +99,7 @@ class _SplashScreenState extends State<SplashScreen>
               height: 220,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.04),
+                color: Colors.white.withValues(alpha: 0.04),
               ),
             ),
           ),
@@ -111,7 +111,7 @@ class _SplashScreenState extends State<SplashScreen>
               height: 260,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.03),
+                color: Colors.white.withValues(alpha: 0.03),
               ),
             ),
           ),
@@ -128,9 +128,9 @@ class _SplashScreenState extends State<SplashScreen>
                       height: 100,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white.withOpacity(0.1),
+                        color: Colors.white.withValues(alpha: 0.1),
                         border: Border.all(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           width: 1.5,
                         ),
                       ),
@@ -155,7 +155,7 @@ class _SplashScreenState extends State<SplashScreen>
                       'Villa El Salvador',
                       style: GoogleFonts.urbanist(
                         fontSize: 14,
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.white.withValues(alpha: 0.5),
                       ),
                     ),
                     const SizedBox(height: 48),
@@ -165,7 +165,7 @@ class _SplashScreenState extends State<SplashScreen>
                       'Nutrición · Comunidad · Bienestar',
                       style: GoogleFonts.urbanist(
                         fontSize: 11,
-                        color: Colors.white.withOpacity(0.3),
+                        color: Colors.white.withValues(alpha: 0.3),
                         letterSpacing: 1.2,
                       ),
                     ),
